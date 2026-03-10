@@ -1,0 +1,21 @@
+pca = PCA(n_components=2)
+df_pca = pca.fit_transform(df)
+
+plt.figure(figsize=(15, 5))
+
+plt.subplot(1, 2, 1)
+scatter = plt.scatter(df_pca[:, 0], df_pca[:, 1], c=df['cluster'], 
+                     cmap='tab10', s=50, alpha=0.7)
+plt.colorbar(scatter)
+plt.title(f'Кластеризация в PCA-пространстве\n(Объясненная дисперсия: {pca.explained_variance_ratio_.sum():.2f})')
+plt.xlabel(f'PC1 ({pca.explained_variance_ratio_[0]:.2f})')
+plt.ylabel(f'PC2 ({pca.explained_variance_ratio_[1]:.2f})')
+plt.grid(True, alpha=0.3)
+
+# Heatmap средних значений по кластерам
+plt.subplot(1, 2, 2)
+cluster_means = df.groupby('cluster').mean()
+sns.heatmap(cluster_means.T, annot=True, cmap='coolwarm', center=0)
+plt.title('Средние значения признаков по кластерам')
+plt.tight_layout()
+plt.show()
